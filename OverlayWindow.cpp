@@ -5,6 +5,7 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 bool OverlayWindow::Create(const wchar_t* title, int width, int height) {
+    // Register window class
     WNDCLASSEXW wc = {};
     wc.cbSize = sizeof(wc);
     wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -13,12 +14,21 @@ bool OverlayWindow::Create(const wchar_t* title, int width, int height) {
     wc.lpszClassName = L"DX12Class";
     wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wc.hbrBackground = nullptr; // no background paint (we draw via DComp/DX)
-    RegisterClassExW(&wc);
+    
+    // RegisterClassExW returns 0 on failure, but ERROR_CLASS_ALREADY_EXISTS is acceptable
+    if (!RegisterClassExW(&wc)) {
+        DWORD err = GetLastError();
+        if (err != ERROR_CLASS_ALREADY_EXISTS) {
+            OutputDebugStringA("Failed to register window class.\n");
+            return false;
+        }
+    }
 
+    // Create overlay window
     // IMPORTANT:
     // - No WS_EX_LAYERED (flip-model + DXGI composition doesn't need it and it breaks some drivers)
-    // - WS_EX_TOPMOST to keep on top
-    // - WS_POPUP | WS_VISIBLE for borderless
+    // - WS_EX_TOPMOST to keep on top of other windows
+    // - WS_POPUP | WS_VISIBLE for borderless transparent overlay
     m_hwnd = CreateWindowExW(
         WS_EX_TOPMOST | WS_EX_TOOLWINDOW,
         wc.lpszClassName,
@@ -28,7 +38,10 @@ bool OverlayWindow::Create(const wchar_t* title, int width, int height) {
         nullptr, nullptr, wc.hInstance, this
     );
 
-    if (!m_hwnd) return false;
+    if (!m_hwnd) {
+        OutputDebugStringA("Failed to create window.\n");
+        return false;
+    }
 
     ShowWindow(m_hwnd, SW_SHOW);
     UpdateWindow(m_hwnd);
@@ -55,6 +68,8 @@ bool OverlayWindow::ProcessMessages() {
 }
 
 void OverlayWindow::SetClickThrough(bool enable) {
+    if (!m_hwnd) return;
+    
     m_clickThrough = enable;
     LONG ex = GetWindowLongW(m_hwnd, GWL_EXSTYLE);
     if (enable)

@@ -90,6 +90,8 @@ bool DX12Renderer::Initialize(HWND hwnd, bool transparentComposition) {
 
     // Create render target views for swap chain back buffers
     CreateRenderTargets();
+    
+    DebugLog("DX12Renderer initialized successfully");
     return true;
 }
 

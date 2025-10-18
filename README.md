@@ -26,14 +26,14 @@ All dependencies are included in the repository:
 
 ## Building
 
-### Visual Studio
+See [BUILD.md](BUILD.md) for detailed build instructions.
+
+### Quick Start
 
 1. Open `Roblox.vcxproj` in Visual Studio 2022
-2. Select your desired configuration:
-   - **Debug|x64** - For development with debug symbols
-   - **Release|x64** - Optimized build for production
+2. Select **Release|x64** configuration
 3. Build the project (Ctrl+Shift+B)
-4. Run the executable from the output directory
+4. Run the executable from `x64/Release/`
 
 ### Command Line (MSBuild)
 
@@ -139,7 +139,9 @@ renderer.Initialize(window.GetHandle(), /*transparentComposition=*/false);
 - Ensure Visual Studio 2022 with C++ desktop development workload
 - Check that all imgui source files are present
 
-## Performance Metrics
+## Performance
+
+For detailed performance information and optimization guidelines, see [PERFORMANCE.md](PERFORMANCE.md).
 
 The overlay includes built-in performance monitoring:
 - **Instant FPS**: Real-time frame rate
@@ -151,6 +153,8 @@ The overlay includes built-in performance monitoring:
 This project is provided as-is for educational and development purposes.
 
 ## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
 
 When contributing, ensure:
 1. All DirectX resources use ComPtr

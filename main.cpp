@@ -3,7 +3,6 @@
 #include <thread>                    // for sleep/yield in FPS limiter
 #include <string>
 #include <vector>
-#include <unordered_map>
 #include <algorithm>                 // for std::find
 #include <cmath>                     // for std::exp
 #include "DX12Renderer.h"
