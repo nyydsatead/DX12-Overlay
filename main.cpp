@@ -237,12 +237,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     // Create overlay window
     OverlayWindow window;
-    if (!window.Create(L"DX12", GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)))
+    if (!window.Create(L"DX12", GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN))) {
+        MessageBoxW(nullptr, L"Failed to create overlay window.", L"Error", MB_OK | MB_ICONERROR);
         return 1;
+    }
 
     // Initialize renderer with transparent DirectComposition swap chain
     DX12Renderer renderer;
     if (!renderer.Initialize(window.GetHandle(), /*transparentComposition=*/true)) {
+        MessageBoxW(nullptr, L"Failed to initialize DX12 renderer.", L"Error", MB_OK | MB_ICONERROR);
         window.Destroy();
         return 1;
     }
